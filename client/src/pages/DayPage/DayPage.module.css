@@ -1,0 +1,34 @@
+.page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: var(--space-5) var(--space-4) var(--space-7);
+}
+
+.feed {
+  display: flex;
+  flex-direction: column;
+}
+
+.empty {
+  text-align: center;
+  padding: var(--space-7) var(--space-4);
+  color: var(--color-text-muted);
+}
+
+.emptyIcon {
+  font-size: 2.5rem;
+  margin-bottom: var(--space-3);
+}
+
+.emptyTitle {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  color: var(--color-text);
+  margin-bottom: var(--space-2);
+}
+
+.loading {
+  text-align: center;
+  color: var(--color-text-muted);
+  padding: var(--space-6);
+}

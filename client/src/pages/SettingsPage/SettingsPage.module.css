@@ -1,0 +1,80 @@
+.page {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: var(--space-5) var(--space-4) var(--space-7);
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-size: 1.6rem;
+  margin-bottom: var(--space-5);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.section {
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.sectionTitle {
+  font-weight: 600;
+  margin-bottom: var(--space-3);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.hint {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  margin-bottom: var(--space-3);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.input {
+  padding: var(--space-3);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-size: 1rem;
+}
+
+.button {
+  padding: var(--space-3);
+  border-radius: var(--radius-sm);
+  border: none;
+  font-weight: 600;
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
+}
+
+.secondaryButton {
+  padding: var(--space-3);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  font-weight: 600;
+  background: none;
+  color: var(--color-text);
+}
+
+.error {
+  color: #c0392b;
+  font-size: 0.85rem;
+}
+
+.success {
+  color: #4d7c0f;
+  font-size: 0.85rem;
+}

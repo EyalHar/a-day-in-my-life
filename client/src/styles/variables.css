@@ -1,0 +1,61 @@
+:root {
+  --font-serif: 'Frank Ruhl Libre', 'David Libre', serif;
+  --font-sans: 'Assistant', system-ui, sans-serif;
+
+  --color-bg: #faf6f0;
+  --color-bg-elevated: #ffffff;
+  --color-text: #2b2420;
+  --color-text-muted: #8a7f74;
+  --color-border: #e8ddd0;
+  --color-accent: #b5651d;
+  --color-accent-contrast: #ffffff;
+
+  --shadow-card: 0 2px 10px rgba(60, 40, 20, 0.08);
+  --shadow-elevated: 0 8px 30px rgba(60, 40, 20, 0.14);
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+
+  --sidebar-width: 240px;
+
+  /* per entry-type accent + tint */
+  --type-photo-accent: #d97706;
+  --type-photo-tint: #fef3c7;
+  --type-note-accent: #57534e;
+  --type-note-tint: #f5f5f4;
+  --type-thought-accent: #8b5cf6;
+  --type-thought-tint: #ede9fe;
+  --type-recipe-accent: #c2410c;
+  --type-recipe-tint: #ffedd5;
+  --type-commitment-accent: #4d7c0f;
+  --type-commitment-tint: #ecfccb;
+  --type-plan-accent: #2563eb;
+  --type-plan-tint: #dbeafe;
+  --type-dream-accent: #4f46e5;
+  --type-dream-tint: #e0e7ff;
+  --type-other-accent: #be185d;
+  --type-other-tint: #fce7f3;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #211d19;
+    --color-bg-elevated: #2c2620;
+    --color-text: #f1e9df;
+    --color-text-muted: #a89a8a;
+    --color-border: #3d352c;
+    --color-accent: #e08a45;
+    --color-accent-contrast: #211d19;
+
+    --shadow-card: 0 2px 10px rgba(0, 0, 0, 0.35);
+    --shadow-elevated: 0 8px 30px rgba(0, 0, 0, 0.5);
+  }
+}
