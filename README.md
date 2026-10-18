@@ -57,6 +57,9 @@ The project is split into separate `client` and `server` folders, each with its 
 
 ```bash
 # install server dependencies
+# enable the hook that blocks committing journal data (once per clone)
+git config core.hooksPath .githooks
+
 cd server
 npm install
 cp .env.example .env
@@ -123,14 +126,39 @@ a-day-in-my-life/
 │   │   └── app.js / server.js
 │   ├── data/               # SQLite database — not in git
 │   └── uploads/            # uploaded photos — not in git
-└── docs/
-    └── ARCHITECTURE.md     # data model, API reference, and core logic
+├── docs/
+│   └── ARCHITECTURE.md     # data model, API reference, and core logic
+├── scripts/
+│   └── check-no-user-data.sh   # shared guard used by the pre-commit hook and CI
+├── .githooks/pre-commit    # blocks committing user data
+└── .github/workflows/      # data-guard CI check
 ```
 
 See **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)** for the data model, full API reference, and how recurrence, the Tehillim split, and reminders work.
 
 ## Data & privacy
 
-- The database (`server/data/`), uploaded photos (`server/uploads/`), and `server/.env` are gitignored and never committed.
+**Everything you write in the journal stays on your machine and must never be committed.** This repository is public; it contains only code.
+
+| Never committed | What it holds |
+|---|---|
+| `server/data/` | The SQLite database — every entry, the private-content password hash, settings |
+| `server/uploads/` | Every uploaded photo (only the empty `.gitkeep` is tracked) |
+| `server/.env`, any `.env.*` | Local configuration (`.env.example` is the only exception) |
+| `*.db`, `*.sqlite`, `*.db-wal`, ... | Any database file, wherever it ends up |
+
+This is enforced in three layers — **don't weaken any of them**:
+
+1. **`.gitignore`** (root and `server/`) — keeps these paths out of `git add`.
+2. **Pre-commit hook** ([.githooks/pre-commit](.githooks/pre-commit)) — rejects a commit that includes them, even with `git add -f`. Enable it once per clone:
+   ```bash
+   git config core.hooksPath .githooks
+   ```
+3. **CI** ([data-guard workflow](.github/workflows/data-guard.yml)) — fails any push or PR that tracks them.
+
+All three use the same rules, in [scripts/check-no-user-data.sh](scripts/check-no-user-data.sh). If you add a new place where user data is stored (a new folder, export file, cache, etc.), add it to **both** `.gitignore` and that script in the same change.
+
+If user data is ever committed by mistake, removing it in a later commit is **not** enough — it stays in the history. It has to be purged from history (e.g. `git filter-repo`) and force-pushed, and anything sensitive should be treated as exposed.
+
 - **Backup:** copy `server/data/` and `server/uploads/`.
 - **Known limitation:** private-content locking is enforced by the API, but photo files under `/uploads` are served without an access check. That's fine for local use; don't expose the server to a network as-is.

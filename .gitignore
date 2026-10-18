@@ -1,1 +1,16 @@
 .claude/
+
+# User data — must never be committed (see README → Data & privacy).
+# Repeated here (not only in server/.gitignore) so it holds even if files move or that file changes.
+server/data/
+server/uploads/*
+!server/uploads/.gitkeep
+*.db
+*.db-wal
+*.db-shm
+*.db-journal
+*.sqlite
+*.sqlite3
+.env
+.env.*
+!.env.example

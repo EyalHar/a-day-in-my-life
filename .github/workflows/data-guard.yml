@@ -1,0 +1,16 @@
+name: data-guard
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  no-user-data:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fail if user data is tracked
+        run: sh scripts/check-no-user-data.sh
