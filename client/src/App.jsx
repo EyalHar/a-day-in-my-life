@@ -5,11 +5,14 @@ import PrivateLock from './components/PrivateLock/PrivateLock';
 import DayPage from './pages/DayPage/DayPage';
 import RecipesPage from './pages/RecipesPage/RecipesPage';
 import SettingsPage from './pages/SettingsPage/SettingsPage';
+import { useCommitmentReminders } from './hooks/useCommitmentReminders';
 import styles from './App.module.css';
 
 const today = format(new Date(), 'yyyy-MM-dd');
 
 export default function App() {
+  useCommitmentReminders();
+
   return (
     <div className={styles.layout}>
       <Sidebar />

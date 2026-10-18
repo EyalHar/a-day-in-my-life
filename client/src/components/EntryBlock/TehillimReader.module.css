@@ -1,0 +1,162 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+}
+
+.planBanner {
+  margin-top: var(--space-3);
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.wrapper .planBanner {
+  margin-top: 0;
+}
+
+.planBanner strong {
+  color: var(--accent-color);
+}
+
+.progress {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.progressText {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-2);
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.bookProgress {
+  direction: rtl;
+  white-space: nowrap;
+}
+
+.progressTrack {
+  height: 6px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: var(--accent-color);
+  opacity: 0.7;
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+.progressDone {
+  opacity: 1;
+}
+
+.chapter {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-3) var(--space-4);
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.chapterRead {
+  border-color: var(--accent-color);
+  background: var(--accent-tint);
+  padding-block: var(--space-2);
+}
+
+.chapterHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.chapter:not(.chapterRead) .chapterHeader {
+  margin-bottom: var(--space-2);
+}
+
+.heRef {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  color: var(--color-accent);
+  text-align: start;
+}
+
+.heRef:disabled {
+  cursor: default;
+}
+
+.chapterRead .heRef {
+  color: var(--accent-color);
+}
+
+.expandHint {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+  text-decoration: underline;
+}
+
+.readButton {
+  flex-shrink: 0;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-elevated);
+  color: var(--color-text-muted);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  transition: all 0.15s ease;
+}
+
+.readButton:hover {
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+}
+
+.readButtonDone,
+.readButtonDone:hover {
+  background: var(--accent-color);
+  border-color: var(--accent-color);
+  color: #fff;
+}
+
+.chapterRead .verses {
+  margin-top: var(--space-2);
+}
+
+.verses {
+  font-family: var(--font-serif);
+  line-height: 1.9;
+  font-size: 0.95rem;
+}
+
+.verse {
+  margin-bottom: 4px;
+}
+
+.verseNumber {
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  margin-left: 6px;
+}
+
+.status {
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  text-align: center;
+}

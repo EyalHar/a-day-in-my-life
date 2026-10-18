@@ -3,7 +3,7 @@ export const ENTRY_TYPES = [
   { value: 'note', label: 'כתיבה', icon: '✍️' },
   { value: 'thought', label: 'מחשבה', icon: '💭' },
   { value: 'recipe', label: 'מתכון', icon: '🍲' },
-  { value: 'commitment', label: 'קבלה על עצמי', icon: '🌱' },
+  { value: 'commitment', label: 'קבלה על עצמי בלי נדר', icon: '🌱' },
   { value: 'plan', label: 'תכנון', icon: '🗺️' },
   { value: 'dream', label: 'חלום', icon: '🌙' },
   { value: 'other', label: 'אחר', icon: '✨' },

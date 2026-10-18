@@ -1,0 +1,150 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(12, 9, 6, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 64px var(--space-6);
+  animation: fadeIn 0.18s ease;
+}
+
+.toolbar {
+  position: absolute;
+  top: 0;
+  inset-inline: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  color: #f1e9df;
+}
+
+.toolButton,
+.navButton {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease;
+}
+
+.toolButton {
+  width: 40px;
+  height: 40px;
+  font-size: 1.1rem;
+}
+
+.toolButton:hover,
+.navButton:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.counter {
+  font-size: 0.9rem;
+  opacity: 0.8;
+  direction: ltr;
+}
+
+.coverButton {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #fff;
+  border-radius: 999px;
+  padding: var(--space-2) var(--space-4);
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: background 0.15s ease;
+}
+
+.coverButton:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.coverActive {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.coverActive:hover {
+  background: var(--color-accent);
+  filter: brightness(1.08);
+}
+
+.navButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
+  font-size: 1.8rem;
+  line-height: 1;
+  padding-bottom: 4px;
+  z-index: 1;
+}
+
+.navPrev {
+  right: var(--space-4);
+}
+
+.navNext {
+  left: var(--space-4);
+}
+
+.figure {
+  margin: 0;
+  max-width: 100%;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.image {
+  max-width: 100%;
+  max-height: calc(100vh - 160px);
+  object-fit: contain;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  animation: zoomIn 0.2s ease;
+}
+
+.caption {
+  color: #f1e9df;
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  text-align: center;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+}
+
+@media (max-width: 640px) {
+  .overlay {
+    padding: 64px 0 var(--space-4);
+  }
+
+  .navButton {
+    display: none;
+  }
+
+  .image {
+    border-radius: 0;
+  }
+}

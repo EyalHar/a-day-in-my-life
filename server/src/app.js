@@ -7,6 +7,8 @@ const daysRouter = require('./routes/days');
 const entriesRouter = require('./routes/entries');
 const privateRouter = require('./routes/private');
 const recipesRouter = require('./routes/recipes');
+const tehillimRouter = require('./routes/tehillim');
+const settingsRouter = require('./routes/settings');
 
 const app = express();
 
@@ -20,6 +22,8 @@ app.use('/api/days', daysRouter);
 app.use('/api/entries', entriesRouter);
 app.use('/api/private', privateRouter);
 app.use('/api/recipes', recipesRouter);
+app.use('/api/tehillim', tehillimRouter);
+app.use('/api/settings', settingsRouter);
 
 app.use((err, req, res, next) => {
   console.error(err);

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getPrivateStatus, changePrivatePassword } from '../../api/private';
 import { usePrivateSession } from '../../hooks/PrivateSessionContext';
+import ReminderSettings from '../../components/ReminderSettings/ReminderSettings';
 import styles from './SettingsPage.module.css';
 
 export default function SettingsPage() {
@@ -36,6 +37,8 @@ export default function SettingsPage() {
         <span>⚙️</span>
         <span>הגדרות</span>
       </h1>
+
+      <ReminderSettings />
 
       <div className={styles.section}>
         <div className={styles.sectionTitle}>🔒 תוכן פרטי</div>

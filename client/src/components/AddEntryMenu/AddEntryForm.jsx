@@ -2,7 +2,9 @@ import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createEntry } from '../../api/entries';
 import { getEntryTypeMeta } from '../../entryTypes';
-import { RECURRENCE_OPTIONS } from '../../recurrence';
+import { RECURRENCE_OPTIONS, getOccurrenceUnit, getTotalOccurrences } from '../../recurrence';
+import TehillimChapterPicker from '../TehillimChapterPicker/TehillimChapterPicker';
+import RecurrenceEndPicker from '../RecurrenceEndPicker/RecurrenceEndPicker';
 import styles from './AddEntryForm.module.css';
 
 export default function AddEntryForm({ date, type, onClose }) {
@@ -13,14 +15,31 @@ export default function AddEntryForm({ date, type, onClose }) {
   const [text, setText] = useState('');
   const [url, setUrl] = useState('');
   const [recurrence, setRecurrence] = useState('daily');
+  const [endMode, setEndMode] = useState('none');
   const [recurrenceUntil, setRecurrenceUntil] = useState('');
+  const [recurrenceCount, setRecurrenceCount] = useState('');
+  const [tehillimChapters, setTehillimChapters] = useState([]);
+  const [tehillimPlan, setTehillimPlan] = useState('');
   const [isPrivate, setIsPrivate] = useState(false);
   const [photos, setPhotos] = useState([]); // { file, previewUrl, caption }
   const [error, setError] = useState('');
 
   const mutation = useMutation({
     mutationFn: () =>
-      createEntry({ date, type, title, text, url, recurrence, recurrenceUntil, isPrivate, photos }),
+      createEntry({
+        date,
+        type,
+        title,
+        text,
+        url,
+        recurrence,
+        recurrenceUntil: endMode === 'until' ? recurrenceUntil : '',
+        recurrenceCount: endMode === 'count' ? recurrenceCount : '',
+        tehillimChapters: tehillimPlan ? [] : tehillimChapters,
+        tehillimPlan,
+        isPrivate,
+        photos,
+      }),
     onSuccess: () => {
       // A commitment can recur onto other already-cached future days, so invalidate broadly.
       queryClient.invalidateQueries({ queryKey: ['day'] });
@@ -28,6 +47,14 @@ export default function AddEntryForm({ date, type, onClose }) {
       onClose();
     },
     onError: (err) => setError(err.message),
+  });
+
+  const totalOccurrences = getTotalOccurrences({
+    originDate: date,
+    recurrence,
+    endMode,
+    until: recurrenceUntil,
+    count: recurrenceCount,
   });
 
   const handleFilesSelected = (e) => {
@@ -52,6 +79,14 @@ export default function AddEntryForm({ date, type, onClose }) {
     setError('');
     if (!text.trim() && !title.trim() && !url.trim() && photos.length === 0) {
       setError('הוסף/י טקסט, קישור או תמונה לפחות');
+      return;
+    }
+    if (isCommitment && recurrence !== 'once' && endMode === 'count' && !(Number(recurrenceCount) >= 1)) {
+      setError('הזן/י מספר ימים (1 ומעלה)');
+      return;
+    }
+    if (isCommitment && tehillimPlan === 'complete' && !totalOccurrences) {
+      setError('כדי לחלק את ספר תהילים צריך להגדיר מספר ימים או תאריך סיום');
       return;
     }
     mutation.mutate();
@@ -104,17 +139,33 @@ export default function AddEntryForm({ date, type, onClose }) {
                   ))}
                 </select>
               </label>
-              <label className={styles.recurrenceField}>
-                <span>עד תאריך</span>
-                <input
-                  className={styles.input}
-                  type="date"
-                  min={date}
-                  value={recurrenceUntil}
-                  onChange={(e) => setRecurrenceUntil(e.target.value)}
-                />
-              </label>
+              {recurrence !== 'once' && (
+                <div className={styles.recurrenceField}>
+                  <span>🏁 עד מתי</span>
+                  <RecurrenceEndPicker
+                    originDate={date}
+                    recurrence={recurrence}
+                    endMode={endMode}
+                    onEndModeChange={setEndMode}
+                    until={recurrenceUntil}
+                    onUntilChange={setRecurrenceUntil}
+                    count={recurrenceCount}
+                    onCountChange={setRecurrenceCount}
+                  />
+                </div>
+              )}
             </div>
+          )}
+
+          {isCommitment && (
+            <TehillimChapterPicker
+              chapters={tehillimChapters}
+              onChange={setTehillimChapters}
+              plan={tehillimPlan}
+              onPlanChange={setTehillimPlan}
+              totalDays={totalOccurrences}
+              unit={getOccurrenceUnit(recurrence)}
+            />
           )}
 
           <label className={styles.photoInputLabel}>

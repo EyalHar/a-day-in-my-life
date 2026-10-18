@@ -1,10 +1,14 @@
 import { useState } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { he } from 'date-fns/locale';
 import { getEntryTypeMeta } from '../../entryTypes';
-import { getRecurrenceLabel } from '../../recurrence';
+import { getOccurrenceUnit, getRecurrenceLabel } from '../../recurrence';
+import { toggleEntryCompletion } from '../../api/entries';
 import { usePrivateSession } from '../../hooks/PrivateSessionContext';
-import EditRecurrenceModal from './EditRecurrenceModal';
+import EditCommitmentModal from './EditCommitmentModal';
+import TehillimReader from './TehillimReader';
+import PhotoGallery from '../PhotoGallery/PhotoGallery';
 import styles from './EntryBlock.module.css';
 
 function getUrlDisplayText(url) {
@@ -15,10 +19,16 @@ function getUrlDisplayText(url) {
   }
 }
 
-export default function EntryBlock({ entry, onDelete }) {
+export default function EntryBlock({ entry, onDelete, coverPhotoId, onToggleCover }) {
   const { openUnlockModal } = usePrivateSession();
   const meta = getEntryTypeMeta(entry.type);
-  const [isEditingRecurrence, setIsEditingRecurrence] = useState(false);
+  const [isEditingCommitment, setIsEditingCommitment] = useState(false);
+  const queryClient = useQueryClient();
+
+  const completeMutation = useMutation({
+    mutationFn: () => toggleEntryCompletion(entry.id, entry.date),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['day', entry.date] }),
+  });
 
   if (entry.locked) {
     return (
@@ -31,20 +41,41 @@ export default function EntryBlock({ entry, onDelete }) {
 
   const time = !entry.recurring && entry.createdAt ? format(new Date(entry.createdAt.replace(' ', 'T')), 'HH:mm') : '';
 
+  const isCommitment = entry.type === 'commitment';
+
   return (
     <div
-      className={styles.card}
+      className={`${styles.card} ${isCommitment && entry.completed ? styles.cardCompleted : ''}`}
       style={{
         '--accent-color': `var(--type-${entry.type}-accent)`,
         '--accent-tint': `var(--type-${entry.type}-tint)`,
       }}
     >
       <div className={styles.header}>
-        <span className={styles.typeChip}>
-          <span>{meta.icon}</span>
-          <span>{meta.label}</span>
-          {entry.isPrivate && <span title="פרטי">🔒</span>}
-        </span>
+        <div className={styles.headerStart}>
+          {isCommitment && (
+            <button
+              className={styles.completeCheckbox}
+              onClick={() => completeMutation.mutate()}
+              disabled={completeMutation.isPending}
+              title={entry.completed ? 'בטל/י סימון ביצוע' : 'סמן/י שביצעת'}
+              aria-label={entry.completed ? 'בוצע' : 'סמן/י שביצעת'}
+            >
+              {entry.completed ? '✅' : '⬜'}
+            </button>
+          )}
+          <span className={styles.typeChip}>
+            <span>{meta.icon}</span>
+            <span>{meta.label}</span>
+            {entry.isPrivate && <span title="פרטי">🔒</span>}
+          </span>
+          {entry.occurrenceNumber && (
+            <span className={styles.dayCounter}>
+              {getOccurrenceUnit(entry.recurrence).singular} {entry.occurrenceNumber}
+              {entry.occurrenceTotal && <span className={styles.dayCounterTotal}> מתוך {entry.occurrenceTotal}</span>}
+            </span>
+          )}
+        </div>
         <div className={styles.actions}>
           <span className={styles.time}>{time}</span>
           <button
@@ -61,16 +92,19 @@ export default function EntryBlock({ entry, onDelete }) {
       {entry.text && <div className={styles.text}>{entry.text}</div>}
 
       {entry.type === 'commitment' && (
-        <button className={styles.recurrenceBadge} onClick={() => setIsEditingRecurrence(true)}>
-          <span>🔁</span>
-          <span>{getRecurrenceLabel(entry.recurrence)}</span>
-          {entry.recurrenceUntil && (
-            <span>
-              עד {format(new Date(`${entry.recurrenceUntil}T00:00:00`), 'd.M.yy', { locale: he })}
-            </span>
-          )}
-          <span className={styles.recurrenceEdit}>✏️</span>
-        </button>
+        <>
+          <button className={styles.recurrenceBadge} onClick={() => setIsEditingCommitment(true)}>
+            <span>{entry.recurrence === 'once' ? '☑️' : '🔁'}</span>
+            <span>{getRecurrenceLabel(entry.recurrence)}</span>
+            {entry.recurrenceUntil && (
+              <span>
+                עד {format(new Date(`${entry.recurrenceUntil}T00:00:00`), 'd.M.yy', { locale: he })}
+              </span>
+            )}
+            <span className={styles.recurrenceEdit}>✏️</span>
+          </button>
+          <TehillimReader entry={entry} />
+        </>
       )}
 
       {entry.url && (
@@ -81,18 +115,16 @@ export default function EntryBlock({ entry, onDelete }) {
       )}
 
       {entry.photos?.length > 0 && (
-        <div className={styles.photoGrid}>
-          {entry.photos.map((photo) => (
-            <div key={photo.id} className={styles.photoItem}>
-              <img src={`/uploads/${photo.filePath}`} alt={photo.caption || meta.label} loading="lazy" />
-              {photo.caption && <div className={styles.photoCaption}>{photo.caption}</div>}
-            </div>
-          ))}
-        </div>
+        <PhotoGallery
+          photos={entry.photos}
+          alt={meta.label}
+          coverPhotoId={coverPhotoId}
+          onToggleCover={entry.recurring ? undefined : onToggleCover}
+        />
       )}
 
-      {isEditingRecurrence && (
-        <EditRecurrenceModal entry={entry} onClose={() => setIsEditingRecurrence(false)} />
+      {isEditingCommitment && (
+        <EditCommitmentModal entry={entry} onClose={() => setIsEditingCommitment(false)} />
       )}
     </div>
   );

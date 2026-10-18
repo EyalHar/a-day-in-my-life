@@ -1,0 +1,32 @@
+.segmented {
+  display: flex;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 3px;
+  gap: 2px;
+}
+
+.segment {
+  flex: 1;
+  border: none;
+  background: none;
+  border-radius: 999px;
+  padding: 6px var(--space-2);
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.segment:hover {
+  color: var(--color-text);
+}
+
+.segmentActive,
+.segmentActive:hover {
+  background: var(--color-bg-elevated);
+  color: var(--color-accent);
+  font-weight: 600;
+  box-shadow: var(--shadow-card);
+}
